@@ -8,14 +8,16 @@
 
 import UIKit
 import CoreData
-
+import RealmSwift
 class CategoryViewController: UITableViewController
 {
-     
+     let realm = try! Realm()
     
-    var categories = [Category]()
+    var categories : Results<Category>!
      var tf = UITextField ()
-     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        loadCategories()
@@ -51,10 +53,12 @@ class CategoryViewController: UITableViewController
     }
 
 
-    func saveCategory() {
+    func saveCategory(category : Category) {
         do{ 
             
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         }
         catch{
             print("error")
@@ -63,24 +67,26 @@ class CategoryViewController: UITableViewController
     }
 //with request : NSFetchRequest<Category> = Category.fetchRequest()
     func loadCategories()  {
-    let request : NSFetchRequest<Category> = Category.fetchRequest()
-        do{
-            categories =  try context.fetch(request)
-        }catch{
-           print("error")
-    }
-        tableView.reloadData()
+        
+      categories = realm.objects(Category.self)
+        
+//    let request : NSFetchRequest<Category> = Category.fetchRequest()
+//        do{
+//            categories =  try context.fetch(request)
+//        }catch{
+//           print("error")
+//    }
+            tableView.reloadData()
     }
     
     @IBAction func addBtn(_ sender: Any) {
         
         let alert =  UIAlertController(title: "add new Category", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add ", style: .default ){(action)in
-            let newCategory = Category(context: self.context)
+            let newCategory = Category()
             newCategory.name = self.tf.text!
-            self.categories.append(newCategory)
         
-            self.saveCategory()
+            self.saveCategory(category: newCategory)
             
         }
         alert.addAction(action)

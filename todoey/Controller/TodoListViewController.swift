@@ -14,7 +14,7 @@ class TodoListViewController: UITableViewController  , UISearchBarDelegate,UIPic
     var itemArray = [Item]()
     var selectedCategory : Category?{
         didSet{
-           loadItems() // load data ellli 5asa b category dh
+       //    loadItems() // load data ellli 5asa b category dh
         }
     }
    // let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -30,7 +30,7 @@ class TodoListViewController: UITableViewController  , UISearchBarDelegate,UIPic
         
         super.viewDidLoad()
     
-        loadItems()
+      //  loadItems()
 
     }
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -56,7 +56,7 @@ class TodoListViewController: UITableViewController  , UISearchBarDelegate,UIPic
         let action = UIContextualAction(style: .destructive, title: "Delete"){
             (action,view,completion )in
           
-            self.context.delete(self.itemArray[indexPath.row])//mohm gdn ashilo mn context el awel
+         //   self.context.delete(self.itemArray[indexPath.row])//mohm gdn ashilo mn context el awel
               self.itemArray.remove(at: indexPath.row)
             self.saveItem()
             completion(true)
@@ -94,12 +94,12 @@ class TodoListViewController: UITableViewController  , UISearchBarDelegate,UIPic
         let alert =  UIAlertController(title: "add new todoey item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add item", style: .default ){(action)in
             
-          //  let context =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-            let newItem = Item(context: self.context)
-            newItem.title = self.tf.text!
-            newItem.done = false
-            newItem.parentCategory = self.selectedCategory // dih bydif relation elli bano w ban el item
-            self.itemArray.append( newItem)
+//          //  let context =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//            let newItem = Item(context: self.context)
+//            newItem.title = self.tf.text!
+//            newItem.done = false
+//            newItem.parentCategory = self.selectedCategory // dih bydif relation elli bano w ban el item
+     //       self.itemArray.append( newItem)
             self.saveItem()
   }
         alert.addTextField{(alertTextField)in
@@ -121,42 +121,39 @@ class TodoListViewController: UITableViewController  , UISearchBarDelegate,UIPic
         }
          self.tableView.reloadData()
     }
-    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest(),predicate : NSPredicate? = nil){ //read data mn Coredata
-        // el code eli gai 34an lma ydos 3la category ytal3 el item bt3to mn 3'iro hytl3 kol item
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        if let addtionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,addtionalPredicate]) // load data elli mawgoda w elli htadaf
-        }else{
-             request.predicate = categoryPredicate // load data elli mawgoda
-        }
-        
-     
-       
-       // let request : NSFetchRequest<Item> = Item.fetchRequest()
-        do{
-           itemArray =  try context.fetch(request) // bagib data mn context
-        }catch{
-            print("error")
-        }
-        tableView.reloadData()
-    }
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {//  dh search
-        let request :  NSFetchRequest<Item> = Item.fetchRequest()
-     
-            let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        loadItems(with: request,predicate: predicate)
-       tableView.reloadData()
-    }
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.count == 0 {//34an lma myob2a4 fih 7arf f search
-            loadItems()
-            tableView.reloadData()
-            DispatchQueue.main.async { // satr dh 34an el cursur y5tafi
-                
-              searchBar.resignFirstResponder()
-                
-            }        }
-    }
+//    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest(),predicate : NSPredicate? = nil){ //read data mn Coredata
+//        // el code eli gai 34an lma ydos 3la category ytal3 el item bt3to mn 3'iro hytl3 kol item
+//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+//        if let addtionalPredicate = predicate {
+//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,addtionalPredicate]) // load data elli mawgoda w elli htadaf
+//        }else{
+//             request.predicate = categoryPredicate // load data elli mawgoda
+//        }
+//     // let request : NSFetchRequest<Item> = Item.fetchRequest()
+//        do{
+//           itemArray =  try context.fetch(request) // bagib data mn context
+//        }catch{
+//            print("error")
+//        }
+//        tableView.reloadData()
+//    }
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {//  dh search
+//        let request :  NSFetchRequest<Item> = Item.fetchRequest()
+//
+//            let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        loadItems(with: request,predicate: predicate)
+//       tableView.reloadData()
+//    }
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if searchBar.text?.count == 0 {//34an lma myob2a4 fih 7arf f search
+//            loadItems()
+//            tableView.reloadData()
+//            DispatchQueue.main.async { // satr dh 34an el cursur y5tafi
+//
+//              searchBar.resignFirstResponder()
+//
+//            }        }
+//    }
 }
 
